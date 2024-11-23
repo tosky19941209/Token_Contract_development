@@ -16,11 +16,11 @@ module.exports = {
         100: "XDAI"
     },
     networks: {
-        etherscan: {
-            apiKey: {
-                sepolia: ETHERSCAN_API_KEY,
-            },
-        },
+        // etherscan: {
+        //     apiKey: {
+        //         sepolia: ETHERSCAN_API_KEY,
+        //     },
+        // },
         gnosis: {
             url: 'https://rpc.gnosischain.com/',
             gasPrice: 10000000000,

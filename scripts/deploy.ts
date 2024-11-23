@@ -1,5 +1,5 @@
 const { ethers, hardhatArguments } = require("hardhat");
-const { nativeCoinSymbol } = require("./networks");
+const networks = require("./networks");
 const fs = require("fs")
 require('dotenv').config();
 
@@ -10,11 +10,11 @@ async function main() {
   }
 
   const [deployer] = await ethers.getSigners();
-  const accountBalance = await ethers.provider.getBalance(deployer)
+  const accountBalance = Number(ethers.formatEther(await ethers.provider.getBalance(deployer)))
   const network = hardhatArguments.network
-  const chainId: number = (await ethers.provider.getNetwork()).chainId
+  const chainId = (await ethers.provider.getNetwork()).chainId
 
-  console.log("Balance:", ethers.formatEther(accountBalance), nativeCoinSymbol[chainId] || "Unknow");
+  console.log("Balance:", accountBalance.toFixed(5), networks.symbol[chainId] || "Unknow");
   console.log("Wallet: ", deployer.address);
   console.log("Network =>", network)
   console.log("ChainID =>", chainId)

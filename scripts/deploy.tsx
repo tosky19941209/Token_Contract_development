@@ -1,26 +1,24 @@
 const { ethers, hardhatArguments } = require("hardhat");
+const { nativeCoinSymbol } = require("./networks");
 const fs = require("fs")
 require('dotenv').config();
 
 async function main() {
 
-  const [deployer] = await ethers.getSigners();
-  console.log("Wallet: ", deployer.address);
-
-  const accountBalance = await ethers.provider.getBalance(deployer)
-  console.log("Balance:", ethers.formatEther(accountBalance), "ETH");
-
   if (!fs.existsSync("deployments")) {
     fs.mkdirSync("deployments");
   }
 
+  const [deployer] = await ethers.getSigners();
+  const accountBalance = await ethers.provider.getBalance(deployer)
   const network = hardhatArguments.network
-  console.log("Network =>", network)
+  const chainId: number = (await ethers.provider.getNetwork()).chainId
 
-  const chainId = (await ethers.provider.getNetwork()).chainId
+  console.log("Balance:", ethers.formatEther(accountBalance), nativeCoinSymbol[chainId] || "Unknow");
+  console.log("Wallet: ", deployer.address);
+  console.log("Network =>", network)
   console.log("ChainID =>", chainId)
 
-  
   // const BridgeToken = await ethers.deployContract("BridgeToken");
   // console.log("BridgeT deployed to address:", await BridgeToken.getAddress());
 

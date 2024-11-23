@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
+
 module.exports = {
     symbol: {
         1: "ETH",      // Ethereum Mainnet
@@ -9,6 +14,27 @@ module.exports = {
         137: "MATIC",  // Polygon (Matic)
         43114: "AVAX", // Avalanche
         100: "XDAI"
+    },
+    networks: {
+        etherscan: {
+            apiKey: {
+                sepolia: ETHERSCAN_API_KEY,
+            },
+        },
+        gnosis: {
+            url: 'https://rpc.gnosischain.com/',
+            gasPrice: 10000000000,
+            accounts: [String(PRIVATE_KEY)],
+        },
+        chiado: {
+            url: "https://rpc.chiadochain.net", // Gnosis Chiado testnet RPC URL
+            gasPrice: 1000000000,
+            accounts: [String(PRIVATE_KEY)],// Add your private key here
+        },
+        sepolia: {
+            url: "https://eth-sepolia.public.blastapi.io",
+            gasPrice: 1000000000,
+            accounts: [String(PRIVATE_KEY)],
+        }
     }
-    // Add more mappings as needed for other chains
 };

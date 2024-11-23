@@ -3,6 +3,45 @@ const networks = require("./networks");
 const fs = require("fs")
 require('dotenv').config();
 
+const USDC_TOKEN_Deployment = async (chainId: any) => {
+  const USDC_TOKEN_Deployment_Transaction = await ethers.deployContract("Token", ["usdc_token", "USDC_TOKEN", 1000000000000, 18]);
+  console.log("USDC_TOKEN was deployed:", await USDC_TOKEN_Deployment_Transaction.getAddress());
+  const deploymentsOutput = {
+    USDC_TOKEN: await USDC_TOKEN_Deployment_Transaction.getAddress()
+  }
+
+  let existingData = {};
+  try {
+    const rawData = fs.readFileSync(`deployments/${chainId}.json`, 'utf8');
+    existingData = JSON.parse(rawData);
+  } catch (err) {
+    console.error("Error reading existing file:", err);
+  }
+  const updatedData = { ...existingData, ...deploymentsOutput };
+  fs.writeFileSync(`deployments/${chainId}.json`, JSON.stringify(updatedData));
+
+}
+
+const WDAI_TOKEN_Deployment = async (chainId: any) => {
+  const USDC_TOKEN_Deployment_Transaction = await ethers.deployContract("Token", ["usdc_token", "USDC_TOKEN", 1000000000000, 18]);
+  console.log("WDAI_TOKEN was deployed:", await USDC_TOKEN_Deployment_Transaction.getAddress());
+
+  const deploymentsOutput = {
+    WDAI: await USDC_TOKEN_Deployment_Transaction.getAddress()
+  }
+
+  let existingData = {};
+  try {
+    const rawData = fs.readFileSync(`deployments/${chainId}.json`, 'utf8');
+    existingData = JSON.parse(rawData);
+  } catch (err) {
+    console.error("Error reading existing file:", err);
+  }
+  const updatedData = { ...existingData, ...deploymentsOutput };
+  fs.writeFileSync(`deployments/${chainId}.json`, JSON.stringify(updatedData));
+  
+}
+
 async function main() {
 
   if (!fs.existsSync("deployments")) {
@@ -10,15 +49,17 @@ async function main() {
   }
 
   const [deployer] = await ethers.getSigners();
-  const accountBalance = Number(ethers.formatEther(await ethers.provider.getBalance(deployer)))
+  const balance = Number(ethers.formatEther(await ethers.provider.getBalance(deployer)))
   const network = hardhatArguments.network
   const chainId = (await ethers.provider.getNetwork()).chainId
 
-  console.log("Balance:", accountBalance.toFixed(5), networks.symbol[chainId] || "Unknow");
-  console.log("Wallet: ", deployer.address);
-  console.log("Network =>", network)
-  console.log("ChainID =>", chainId)
+  console.log("    Balance:", balance.toFixed(5), networks.symbol[chainId] || "Unknown");
+  console.log("    Wallet: ", deployer.address);
+  console.log("    Network =>", network)
+  console.log("    ChainID =>", chainId)
 
+  await USDC_TOKEN_Deployment(chainId)
+  await WDAI_TOKEN_Deployment(chainId)
   // const BridgeToken = await ethers.deployContract("BridgeToken");
   // console.log("BridgeT deployed to address:", await BridgeToken.getAddress());
 
@@ -28,8 +69,7 @@ async function main() {
   // const TokenFactory = await ethers.deployContract("TokenFactory");
   // console.log("TokenFactory deployed to address:", await TokenFactory.getAddress());
 
-  // const USDC_Token = await ethers.deployContract("Token", ["usdc_token", "USDC_TOKEN", 1000000000000, 18]);
-  // console.log("USDC_Token deployed to address:", await USDC_Token.getAddress());
+
 
   // const WDAI_Token = await ethers.deployContract("Token", ["wdai_token", "WDAI_TOKEN", 100000000, 18]);
   // console.log("USDC_Token deployed to address:", await WDAI_Token.getAddress());
